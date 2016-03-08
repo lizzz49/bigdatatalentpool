@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="bigdatatalentpool"
+  id="myeclipse.1455282618309"
+  context-root="/bigdatatalentpool"
+  j2ee-spec="5.0"
+  archive="bigdatatalentpool.war">
+  <attributes>
+    <attribute name="webrootdir" value="WebRoot" />
+  </attributes>
+</project-module>
+

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.data.job.mapper.EmployeeMapper">
+
+	<resultMap id="Employee" type="com.data.job.domain.Employee">
+		<id column="id" property="id"/>
+		<result column="username" property="username"/>
+		<result column="email" property="email"/>
+		<result column="password" property="password"/>
+		<result column="job" property="job"/>
+		<result column="birthday" jdbcType="DATE" property="birthday" javaType="java.util.Date"/>
+		<result column="address" property="address"/>
+		<result column="phone" property="phone"/>
+		<result column="description" property="description"/>
+		<result column="avatar" property="avatar"/>
+	</resultMap>
+
+	<!-- 新增Employee-->
+	<insert id="addEmployee" parameterType="Employee">
+		<![CDATA[
+			INSERT INTO employee(username, password, email)
+			VALUES (#{username}, #{password}, #{email})
+		]]>
+		<selectKey resultType="int" keyProperty="id">
+			<![CDATA[
+			SELECT LAST_INSERT_ID() as id
+			]]>
+		</selectKey>
+	</insert>
+
+	<!-- 更新用户头像-->
+	<update id="updateAvatar">
+		UPDATE employee SET avatar = #{avatar} WHERE id = #{id}
+	</update>
+
+	<!-- 更新用户资料-->
+	<update id="updateProfile" parameterType="Employee">
+		UPDATE employee SET job = #{job}, birthday = #{birthday, jdbcType = DATE}, address = #{address}, phone = #{phone}, description = #{description} WHERE id = #{id}
+	</update>
+
+	<!-- 更新用户密码-->
+	<update id="updatePassword">
+		UPDATE employee SET password = #{password} WHERE id = #{id}
+	</update>
+
+	<!-- 根据用户名查找Employee-->
+	<select id="getEmployeeByUsername" parameterType="string" resultMap="Employee">
+		SELECT id, username, email, password FROM employee
+		WHERE username = #{username}
+		limit 1
+	</select>
+
+	<!-- 通过id得到Employee-->
+	<select id="getEmployeeById" resultType="Employee">
+		SELECT * FROM employee WHERE id = #{id}
+	</select>
+
+	<!-- Employee登录-->
+	<select id="loginEmployee" resultMap="Employee">
+		SELECT * FROM employee WHERE username = #{username} AND password = #{password}
+	</select>
+
+	<!-- 获得Employee数量-->
+	<select id="getEmployeeCount" resultType="java.lang.Integer" parameterType="map">
+		SELECT COUNT(1) FROM employee
+	</select>
+
+	<!-- 获得Employee列表-->
+	<select id="getEmployeeList" resultType="Employee" parameterType="map">
+		SELECT * FROM employee WHERE 1 = 1
+		<if test="employee.username != null and employee.username != ''">
+			AND username = #{employee.username}
+		</if>
+		<if test="employee.email != null and employee.email != ''">
+			AND email = #{employee.email}
+		</if>
+		<if test="employee.job != null and employee.job != ''">
+			AND job = #{employee.job}
+		</if>
+		<if test="employee.phone != null and employee.phone != ''">
+			AND phone = #{employee.phone}
+		</if>
+		ORDER BY id DESC LIMIT #{start}, #{limit}
+	</select>
+
+	<!-- 获得指定数量的employee列表-->
+	<select id="getAEmployeeList" resultMap="Employee">
+		SELECT * FROM employee
+		ORDER BY id DESC LIMIT #{limit}
+	</select>
+
+</mapper>

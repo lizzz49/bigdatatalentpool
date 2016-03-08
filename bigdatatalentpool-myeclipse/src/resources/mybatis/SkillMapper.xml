@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.job.mapper.SkillMapper">
+
+    <resultMap id="Skill" type="com.data.job.domain.Skill">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="percent" property="percent"/>
+        <result column="resume_id" property="resumeId"/>
+    </resultMap>
+
+    <!-- 新增技能-->
+    <insert id="addSkill" parameterType="Skill">
+        <![CDATA[
+			INSERT INTO skill(name, percent, resume_id)
+			VALUES (#{name}, #{percent}, #{resumeId})
+		]]>
+        <selectKey resultType="int" keyProperty="id">
+            <![CDATA[
+			SELECT LAST_INSERT_ID() as id
+			]]>
+        </selectKey>
+    </insert>
+
+    <!-- 更新技能-->
+    <update id="updateSkill">
+        UPDATE skill SET name = #{name}, percent = #{percent} WHERE id = #{id}
+    </update>
+
+    <!-- 根据主键删除技能-->
+    <delete id="deleteSkillById">
+        DELETE FROM skill WHERE id = #{id}
+    </delete>
+
+    <!-- 获得某个特定的Skill-->
+    <select id="getSpecificSkill" resultType="Skill">
+        SELECT * FROM skill WHERE name = #{name} AND percent = #{percent} AND resume_id = #{resumeId}
+    </select>
+
+    <!-- 获得技能列表-->
+    <select id="getSkillList" resultType="Skill">
+        SELECT * FROM skill WHERE resume_id = #{resumeId}
+    </select>
+</mapper>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.job.mapper.EducationMapper">
+
+    <resultMap id="Education" type="com.data.job.domain.Education">
+        <id column="id" property="id"/>
+        <result column="school" property="school"/>
+        <result column="qualification" property="qualification"/>
+        <result column="date" property="date"/>
+        <result column="note" property="note"/>
+        <result column="resume_id" property="resumeId"/>
+    </resultMap>
+
+    <!-- 新增教育信息-->
+    <insert id="addEducation" parameterType="Education">
+        <![CDATA[
+			INSERT INTO education(school, qualification, date, note, resume_id)
+			VALUES (#{school}, #{qualification}, #{date}, #{note}, #{resumeId})
+		]]>
+        <selectKey resultType="int" keyProperty="id">
+            <![CDATA[
+			SELECT LAST_INSERT_ID() as id
+			]]>
+        </selectKey>
+    </insert>
+
+    <!-- 更新教育信息-->
+    <update id="updateEducation">
+        UPDATE education SET school = #{school}, qualification = #{qualification}, date = #{date}, note = #{note}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据id删除教育信息-->
+    <delete id="deleteEducationById">
+        DELETE FROM education WHERE id = #{id}
+    </delete>
+
+    <!-- 根据学校查找教育信息-->
+    <select id="getEducationBySchool" resultType="Education">
+        SELECT * FROM education WHERE resume_id = #{resumeId} AND school = #{school}
+    </select>
+
+    <!-- 查找特定教育信息-->
+    <select id="getSpecificEducation" resultType="Education">
+        SELECT * FROM education WHERE resume_id = #{resumeId} AND school = #{school} AND qualification = #{qualification} AND date = #{date}
+    </select>
+
+    <!-- 获得教育信息列表-->
+    <select id="getEducationList" resultType="Education">
+        SELECT * FROM education WHERE resume_id = #{resumeId}
+    </select>
+</mapper>

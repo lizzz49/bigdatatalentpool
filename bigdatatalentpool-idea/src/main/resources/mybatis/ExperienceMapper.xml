@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.job.mapper.ExperienceMapper">
+
+    <resultMap id="Experience" type="com.data.job.domain.Experience">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="date" property="date"/>
+        <result column="note" property="note"/>
+        <result column="resume_id" property="resumeId"/>
+    </resultMap>
+
+    <!-- 新增工作经验-->
+    <insert id="addExperience" parameterType="Experience">
+        <![CDATA[
+			INSERT INTO experience(title, date, note, resume_id)
+			VALUES (#{title}, #{date}, #{note}, #{resumeId})
+		]]>
+        <selectKey resultType="int" keyProperty="id">
+            <![CDATA[
+			SELECT LAST_INSERT_ID() as id
+			]]>
+        </selectKey>
+    </insert>
+
+    <!-- 更新经历-->
+    <update id="updateExperience">
+        UPDATE experience SET title = #{title}, date = #{date}, note = #{note} WHERE id = #{id}
+    </update>
+
+    <!-- 根据id删除工作经验-->
+    <delete id="deleteExperienceById">
+        DELETE FROM experience WHERE id = #{id}
+    </delete>
+
+    <!-- 获得特定的工作经验-->
+    <select id="getSpecificExperience" resultType="Experience">
+        SELECT * FROM experience WHERE title =#{title} AND date = #{date} AND note = #{note} AND resume_id = #{resumeId}
+    </select>
+
+    <!-- 获得经验列表-->
+    <select id="getExperienceList" resultType="Experience">
+        SELECT * FROM experience WHERE resume_id = #{resumeId}
+    </select>
+</mapper>

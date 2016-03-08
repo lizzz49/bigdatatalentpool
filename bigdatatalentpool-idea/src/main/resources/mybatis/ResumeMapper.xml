@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.data.job.mapper.ResumeMapper">
+
+    <resultMap id="Resume" type="com.data.job.domain.Resume">
+        <id column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="employee_id" property="employeeId"/>
+        <result column="highest_degree" property="highestDegree"/>
+        <result column="experience" property="experience"/>
+        <result column="introduction" property="introduction"/>
+        <result column="job_category_ids" property="jobCategoryIds"/>
+        <result column="city_ids" property="cityIds"/>
+        <result column="status" property="status"/>
+    </resultMap>
+
+    <!-- 新增Resume-->
+    <insert id="addResume" parameterType="Resume">
+        <![CDATA[
+			INSERT INTO resume(title, employee_id, highest_degree, experience, introduction, job_category_ids, city_ids)
+			VALUES (#{title}, #{employeeId}, #{highestDegree}, #{experience}, #{introduction}, #{jobCategoryIds}, #{cityIds})
+		]]>
+        <selectKey resultType="int" keyProperty="id">
+            <![CDATA[
+			SELECT LAST_INSERT_ID() as id
+			]]>
+        </selectKey>
+    </insert>
+
+    <!-- 更新resume的状态-->
+    <update id="updateResumeStatus">
+        UPDATE resume SET status = #{status} WHERE id = #{id}
+    </update>
+
+    <!-- 更新resume-->
+    <update id="updateResume">
+        UPDATE resume SET title = #{title}, employee_id = #{employeeId}, highest_degree = #{highestDegree}, experience = #{experience}, introduction = #{introduction}, job_category_ids = #{jobCategoryIds}, city_ids = #{cityIds}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据id删除简历-->
+    <delete id="deleteResumeById">
+        DELETE FROM resume WHERE id = #{id}
+    </delete>
+
+    <!-- 根据Title查找Resume-->
+    <select id="getResumeByTitle" resultMap="Resume">
+        SELECT * FROM resume WHERE title = #{title} AND employee_id = #{id}
+    </select>
+
+    <!-- 根据用户id获得简历列表-->
+    <select id="getResumeListByUserId" resultMap="Resume">
+        SELECT * FROM resume WHERE employee_id = #{id}
+        <if test="status != null">
+            AND status = #{status}
+        </if>
+    </select>
+
+    <!-- 根据简历id获得简历详情-->
+    <select id="getResumeById" resultMap="Resume">
+        SELECT * FROM resume WHERE id = #{id}
+    </select>
+
+    <!-- 获得Resume数量-->
+    <select id="getResumeCount" resultType="java.lang.Integer" parameterType="map">
+        SELECT COUNT(1) FROM resume WHERE status = 1
+    </select>
+
+    <!-- 获得简历列表-->
+    <select id="getResumeList" resultMap="Resume" parameterType="map">
+        SELECT * FROM resume WHERE 1 = 1 AND status = 1
+        <if test="resume.title != null and resume.title != ''">
+            AND title LIKE '%${resume.title}%'
+        </if>
+        <if test="resume.highestDegree != null and resume.highestDegree != ''">
+            AND highest_degree = #{resume.highestDegree}
+        </if>
+        <if test="resume.experience != null and resume.experience != ''">
+            AND experience = #{resume.experience}
+        </if>
+        ORDER BY id DESC LIMIT #{start}, #{limit}
+    </select>
+
+    <!-- 获得指定数量的简历列表-->
+    <select id="getAResumeList" resultMap="Resume">
+        SELECT * FROM resume WHERE status = 1
+        ORDER BY id DESC LIMIT #{limit}
+    </select>
+</mapper>
