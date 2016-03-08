@@ -1,6 +1,11 @@
 ## 项目简介
 本项目采用目前最流行的Spring+SpringMVC+Mybatis架构，数据库为mysql,目前已经部署至[大数据人才简历库](http://121.42.144.80:8080/bigdatatalentpool/)
 
+## 下载项目
+```
+git clone git@github.com:noprom/bigdatatalentpool.git
+```
+
 ## 来几张效果图
 ![](imgs/1.png)
 ![](imgs/2.png)
